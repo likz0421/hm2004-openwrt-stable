@@ -329,7 +329,20 @@
 };
 
 
+/* HM2004 runs Ethernet/PON PPE flow offload. It has no NPU WLAN memory
+ * contract; retain the firmware region only, as in the original PonWrt board.
+ * In particular the inherited packet region at 0x8a000000 overlaps the FIT
+ * kernel load address and must not be reserved on this board. */
+&{/reserved-memory} {
+	/delete-node/ npu-pkt@8a000000;
+	/delete-node/ npu-txpkt@8cc00000;
+	/delete-node/ npu-txbufid@90c00000;
+	/delete-node/ npu-ba@90c06800;
+};
+
 &npu {
+	memory-region = <&npu_binary>;
+	memory-region-names = "binary";
 	status = "okay";
 };
 
