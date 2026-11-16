@@ -69,3 +69,32 @@ define Device/airoha_an7581-evb-emmc
   ARTIFACTS := preloader.bin bl31-uboot.fip
 endef
 TARGET_DEVICES += airoha_an7581-evb-emmc
+
+
+# HM2004-DU board support from pbs05/PonWrt f6977f29.
+define Device/h3c_hm2004-du
+  $(call Device/FitImageLzma)
+  DEVICE_VENDOR := H3C
+  DEVICE_MODEL := HM2004-DU
+  DEVICE_DTS := an7581-h3c-hm2004-du
+  KERNEL_LOADADDR := 0x8a000000
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  UBOOTENV_IN_UBI := 1
+  KERNEL_IN_UBI := 1
+  KERNEL := kernel-bin | gzip
+  KERNEL_INITRAMFS = kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(DEVICE_DTS).dtb with-initrd | pad-to 128k
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+  IMAGES := sysupgrade.itb
+  IMAGE/sysupgrade.itb = append-kernel | \
+	fit gzip $$(KDIR)/image-$$(DEVICE_DTS).dtb external-static-with-rootfs | \
+	append-metadata
+  DEVICE_PACKAGES := kmod-gpio-button-hotplug kmod-leds-gpio \
+	 kmod-usb3 kmod-usb-ledtrig-usbport \
+	 kmod-phy-airoha-en8811h kmod-airoha-en7572 kmod-airoha-xpon \
+	 airoha-ponctl airoha-pond \
+	 kmod-mt7915e kmod-mt7916-firmware wpad-openssl \
+	 fitblk nand-utils ubi-utils
+endef
+TARGET_DEVICES += h3c_hm2004-du

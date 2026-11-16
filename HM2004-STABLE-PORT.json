@@ -1,0 +1,28 @@
+{
+  "official_stable_branch": "openwrt-25.12",
+  "official_stable_commit": "60c494ad065fe3fcaeadf0e9ff4a8a2dc6e6be43",
+  "official_latest_release": "25.12.6",
+  "hardware_source": "pbs05/ponwrt",
+  "hardware_commit": "f6977f2947eb355b106470354feae3d14868fbdd",
+  "kernel": "6.12.112",
+  "candidate_patches": [
+    "181-v7.3-net-airoha-npu-load-the-firmware-without-the-sysfs-fall.patch",
+    "202-28-pinctrl-airoha-an7581-split-pon-tx-disable-gpio.patch",
+    "310-11-net-airoha-disconnect-PHY-after-QDMA-teardown.patch",
+    "310-12-net-airoha-use-port-lock-for-MIB-stats.patch",
+    "608-net-pcs-airoha-add-AN7581-PON-line-modes.patch",
+    "748-phy-airoha-an7581-select-usb-hsgmii-for-ethernet.patch",
+    "915-01-net-netfilter-flowtable-Add-the-capability-to-offloa.patch",
+    "915-02-net-airoha-Set-hw-QoS-parameter-according-to-the-pac.patch",
+    "920-13-net-airoha-Rework-MTU-configuration.patch",
+    "920-15-net-airoha-fix-wrong-airoha_get_fe_port.patch",
+    "922-net-airoha-add-AN7581-PON-data-and-control-paths.patch",
+    "924-net-airoha-npu-use-coherent-mailbox-dma.patch",
+    "925-net-airoha-add-PON-PPE-offload-metadata.patch",
+    "926-net-airoha-npu-bound-mailbox-wait.patch",
+    "927-net-airoha-select-NBQ-for-PPE-egress-on-external-SerDes.patch",
+    "928-net-airoha-expose-PPE-bind-rate-threshold.patch",
+    "930-net-airoha-fix-native-l2b-entry-layout.patch"
+  ],
+  "validation_status": "pending kernel preparation and compile; not approved for flashing"
+}

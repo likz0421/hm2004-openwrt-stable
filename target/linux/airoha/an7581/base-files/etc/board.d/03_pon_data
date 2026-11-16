@@ -1,0 +1,28 @@
+#!/bin/sh
+. /lib/functions/uci-defaults.sh
+. /lib/functions/system.sh
+[ "$(board_name)" = 'h3c,hm2004-du' ] || exit 0
+board_config_update
+json_add_object pon_data
+json_add_object factory
+json_add_string type ubi
+json_add_int size 1048576
+json_add_string parent ubi
+json_close_object
+json_close_object
+json_add_object identity
+json_add_object targets
+json_add_object factory
+json_add_object fields
+json_add_object pon_sn
+json_add_string kind pon-sn
+json_add_int offset 96
+json_add_int size 12
+json_add_string encoding pon-ascii12
+json_close_object
+json_close_object
+json_close_object
+json_close_object
+json_close_object
+board_config_flush
+touch /tmp/pon-board-identity.available
