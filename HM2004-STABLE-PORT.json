@@ -30,7 +30,7 @@
     "note": "Adapted 922 provides linux/airoha-eth.h and seven exports required by XPON; zero-fuzz application passed on 819 official plus five candidate patches. Compile and runtime validation pending. 924-930 NPU/PPE enhancements remain deferred.",
     "922_sha256": "854977f297956956042ea1c44a24fa751d495f5dfa9a1b13f5d6904412b98ab7"
   },
-  "validation_status": "pre-922 kernel and PON frontends compiled in run 43983315797; XPON requires 922. Combined gate pending; not approved for flashing",
+  "validation_status": "922 kernel, PON frontends, XPON and FMCS firmware compiled in run43991972130; FMCS driver callback compatibility fixed separately. Combined network and FMCS gate pending; not approved for flashing",
   "network_packages": {
     "repo": "immortalwrt/immortalwrt",
     "commit": "761b7ff22cbf7c13f28fc631bd70a84d295fd627",
@@ -41,6 +41,17 @@
       "package/network/utils/fullconenat-nft/",
       "package/libs/libnftnl/"
     ]
+  },
+  "network_validation": {
+    "fixes": ["nftables JSON redirect null entry", "IPv6 fullcone probe fallback", "per-zone masquerade address restrictions", "per-netns conntrack notification chain and lifetime", "reject unsupported fullcone parameters"],
+    "conntrack_chain_source": "immortalwrt/immortalwrt@761b7ff22cbf7c13f28fc631bd70a84d295fd627:target/linux/generic/hack-6.12/952-net-conntrack-events-support-multiple-registrant.patch",
+    "kernel_patch_sha256": "6a1c99444cf722239a587e6af0546677d5c06e0bc8bf5693124ad03f2905f9ad",
+    "ucode_address_regressions_passed": 29,
+    "package_patch_zero_fuzz_count": 12,
+    "host_notifier_control_flow": "passed; stubs do not prove kernel concurrency",
+    "package_selection_and_kernel_override": "passed on clean OpenWrt25.12 source",
+    "target_compile_and_qemu_runtime": "pending CI",
+    "hardware_validation": "not performed"
   },
   "npu_memory": "firmware binary only; inherited WLAN reservations removed at board level"
 }

@@ -1,0 +1,79 @@
+--- a/root/usr/share/ucode/fw4.uc
++++ b/root/usr/share/ucode/fw4.uc
+@@ -2262,9 +2262,22 @@
+ 		zone.related_subnets = related_subnets;
+ 		zone.related_physdevs = related_physdevs;
+ 
++		zone.fullcone = zone.masq && this.state.defaults.fullcone;
++		zone.fullcone6 = zone.masq6 && this.state.defaults.fullcone6;
++
++		// Fullcone cannot preserve masquerading address restrictions.
++		// Use the original masquerade rules for both families in this zone.
++		if ((zone.fullcone || zone.fullcone6) &&
++		    (length(masq_src_subnets[0]) || length(masq_src_subnets[1]) ||
++		     length(masq_dest_subnets[0]) || length(masq_dest_subnets[1]))) {
++			zone.fullcone = false;
++			zone.fullcone6 = false;
++			this.warn_section(data, "disabling fullcone for this zone due to masq_src/masq_dest address restrictions; using masquerade instead");
++		}
++
+ 		if (zone.masq) {
+ 			zone.dflags.snat = true;
+-			if (this.state.defaults.fullcone) {
++			if (zone.fullcone) {
+ 				zone.dflags.dnat = true;
+ 				this.myinfo_section(data, "IPv4 fullcone enabled for zone '" + zone.name + "'");
+ 			}
+@@ -2272,7 +2285,7 @@
+ 
+ 		if (zone.masq6) {
+ 			zone.dflags.snat = true;
+-			if (this.state.defaults.fullcone6) {
++			if (zone.fullcone6) {
+ 				zone.dflags.dnat = true;
+ 				this.myinfo_section(data, "IPv6 fullcone enabled for zone '" + zone.name + "'");
+ 			}
+--- a/root/usr/share/firewall4/templates/ruleset.uc
++++ b/root/usr/share/firewall4/templates/ruleset.uc
+@@ -327,10 +327,10 @@
+ {%   for (let redirect in fw4.redirects(`dstnat_${zone.name}`)): %}
+ 		{%+ include("redirect.uc", { fw4, zone, redirect }) %}
+ {%   endfor %}
+-{%   if (zone.masq && fw4.default_option("fullcone")): %}
++{%   if (zone.masq && zone.fullcone): %}
+ 		{%+ include("zone-fullcone.uc", { fw4, zone, family: 4, direction: "dstnat" }) %}
+ {%   endif %}
+-{%   if (zone.masq6 && fw4.default_option("fullcone6")): %}
++{%   if (zone.masq6 && zone.fullcone6): %}
+ 		{%+ include("zone-fullcone.uc", { fw4, zone, family: 6, direction: "dstnat" }) %}
+ {%   endif %}
+ {%   fw4.includes('chain-append', `dstnat_${zone.name}`) %}
+@@ -343,24 +343,24 @@
+ {%   for (let redirect in fw4.redirects(`srcnat_${zone.name}`)): %}
+ 		{%+ include("redirect.uc", { fw4, zone, redirect }) %}
+ {%   endfor %}
+-{%   if (zone.masq && !fw4.default_option("fullcone")): %}
++{%   if (zone.masq && !zone.fullcone): %}
+ {%    for (let saddrs in zone.masq4_src_subnets): %}
+ {%     for (let daddrs in zone.masq4_dest_subnets): %}
+ 		{%+ include("zone-masq.uc", { fw4, zone, family: 4, saddrs, daddrs }) %}
+ {%     endfor %}
+ {%    endfor %}
+ {%   endif %}
+-{%   if (zone.masq6 && !fw4.default_option("fullcone6")): %}
++{%   if (zone.masq6 && !zone.fullcone6): %}
+ {%    for (let saddrs in zone.masq6_src_subnets): %}
+ {%     for (let daddrs in zone.masq6_dest_subnets): %}
+ 		{%+ include("zone-masq.uc", { fw4, zone, family: 6, saddrs, daddrs }) %}
+ {%     endfor %}
+ {%    endfor %}
+ {%   endif %}
+-{%   if (zone.masq && fw4.default_option("fullcone")): %}
++{%   if (zone.masq && zone.fullcone): %}
+ 		{%+ include("zone-fullcone.uc", { fw4, zone, family: 4, direction: "srcnat" }) %}
+ {%   endif %}
+-{%   if (zone.masq6 && fw4.default_option("fullcone6")): %}
++{%   if (zone.masq6 && zone.fullcone6): %}
+ 		{%+ include("zone-fullcone.uc", { fw4, zone, family: 6, direction: "srcnat" }) %}
+ {%   endif %}
+ {%   fw4.includes('chain-append', `srcnat_${zone.name}`) %}

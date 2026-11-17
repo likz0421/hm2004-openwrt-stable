@@ -1,0 +1,11 @@
+--- a/src/parser_json.c
++++ b/src/parser_json.c
+@@ -2287,7 +2287,7 @@
+ 	size_t i;
+ 
+ 	for (i = 0; i < array_size(nat_etypes); i++) {
+-		if (!strcmp(type, nat_etypes[i]))
++		if (nat_etypes[i] && !strcmp(type, nat_etypes[i]))
+ 			return i;
+ 	}
+ 	return -1;

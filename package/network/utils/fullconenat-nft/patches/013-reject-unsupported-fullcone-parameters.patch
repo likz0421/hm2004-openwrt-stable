@@ -1,0 +1,20 @@
+Subject: [PATCH] nft_fullcone: reject unsupported attributes (after chain lifecycle fix)
+
+Same guard as the prior 011 proposal; apply as 013 after 010 + 012,
+without applying the old 011. No parameter ABI expansion.
+
+--- a/src/nft_ext_fullcone.c
++++ b/src/nft_ext_fullcone.c
+@@ -132,6 +132,12 @@
+ 	struct nft_fullcone_net *fn = net_generic(ctx->net, nft_fullcone_net_id);
+ 	int err;
+ 
++	/* Parameterized fullcone is not implemented by this source version. */
++	if (tb[NFTA_FULLCONE_FLAGS] ||
++	    tb[NFTA_FULLCONE_REG_PROTO_MIN] ||
++	    tb[NFTA_FULLCONE_REG_PROTO_MAX])
++		return -EOPNOTSUPP;
++
+ 	err = nf_ct_netns_get(ctx->net, ctx->family);
+ 	if (err < 0)
+ 		return err;
