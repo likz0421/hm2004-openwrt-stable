@@ -11,7 +11,8 @@
       "608-net-pcs-airoha-add-AN7581-PON-line-modes.patch",
       "748-phy-airoha-an7581-select-usb-hsgmii-for-ethernet.patch",
       "920-13-net-airoha-Rework-MTU-configuration.patch",
-      "920-15-net-airoha-fix-wrong-airoha_get_fe_port.patch"
+      "920-15-net-airoha-fix-wrong-airoha_get_fe_port.patch",
+      "922-net-airoha-add-AN7581-PON-data-and-control-paths.patch"
     ],
     "removed": [
       "181-v7.3-net-airoha-npu-load-the-firmware-without-the-sysfs-fall.patch",
@@ -19,7 +20,6 @@
       "310-12-net-airoha-use-port-lock-for-MIB-stats.patch",
       "915-01-net-netfilter-flowtable-Add-the-capability-to-offloa.patch",
       "915-02-net-airoha-Set-hw-QoS-parameter-according-to-the-pac.patch",
-      "922-net-airoha-add-AN7581-PON-data-and-control-paths.patch",
       "924-net-airoha-npu-use-coherent-mailbox-dma.patch",
       "925-net-airoha-add-PON-PPE-offload-metadata.patch",
       "926-net-airoha-npu-bound-mailbox-wait.patch",
@@ -27,9 +27,10 @@
       "928-net-airoha-expose-PPE-bind-rate-threshold.patch",
       "930-net-airoha-fix-native-l2b-entry-layout.patch"
     ],
-    "note": "922 PON data path deferred to next iteration; 924-930 NPU/PPE enhancements pending 922"
+    "note": "Adapted 922 provides linux/airoha-eth.h and seven exports required by XPON; zero-fuzz application passed on 819 official plus five candidate patches. Compile and runtime validation pending. 924-930 NPU/PPE enhancements remain deferred.",
+    "922_sha256": "854977f297956956042ea1c44a24fa751d495f5dfa9a1b13f5d6904412b98ab7"
   },
-  "validation_status": "pending kernel preparation and compile; not approved for flashing",
+  "validation_status": "pre-922 kernel and PON frontends compiled in run 43983315797; XPON requires 922. Combined gate pending; not approved for flashing",
   "network_packages": {
     "repo": "immortalwrt/immortalwrt",
     "commit": "761b7ff22cbf7c13f28fc631bd70a84d295fd627",
